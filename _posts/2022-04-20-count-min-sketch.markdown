@@ -193,7 +193,7 @@ Our sparse recovery data strcuture accomplishes the goal that wanted to achieve.
 
 ## Applications of Sparse Recovery 
 
-We motivated the use of sparse recovery algorithms in previous sections with our running example of the market researcher. Now, we will dicsuss more examples for applications of sparse recovery. 
+We motivated the use of sparse recovery algorithms in previous sections with our running example of the market researcher. Now, we will dicsuss another example for applications of sparse recovery. 
 
 ### Electroencephalograms (EEGs)
 Electroencephalogram (EEGs) are used to detect electrical activity in the brain given response to different stimuli. At any given moment, only a few sources in the brain are active, out of countless regions and parts. 

@@ -152,8 +152,8 @@ This is where the sparse recovery problem comes in. Suppose we have a vector $$x
 ## Building Blocks of the Algorithm
 
 It was mentioned above that $$x$$ should have “$$s$$ nonzero elements or less”. We refer to this property as being $$x$$ is s-sparse if this is the case. So, we say that $$x$$ is 1-sparse if there is only one nonzero element in $$x$$. This forms the core building block for our sparse recovery algorithm: the 1-sparse recovery sketch. The core idea for the 1-sparse recovery sketch is that we want to maintain three numbers:
-- $$w_1 = \sum_{i=1}^{n} x_i$$ 
-- $$w_2 = \sum_{i=1}^{n} x_i \times i$$
+- $$w_1 = \sum_{i=1}^{n} x_i$$.
+- $$w_2 = \sum_{i=1}^{n} x_i \times i$$.
 - $$w_3 = \sum_{i=1}^{n} x_i \times r^i \mod p$$, where $$p >= n^c$$ is a prime, and $$r$$ is randomly sampled from $$\{ 1, \dots, p - 1 \}$$. 
 
 Given any update $$\Delta$$ to the $$i$$th entry of x, we update $$w_1 \leftarrow w_1 + \Delta$$, $$w_2 \leftarrow w_2 + \Delta \times i$$, $$w_3 \leftarrow w_3 + \Delta \times r^i \mod p$$.

@@ -218,3 +218,8 @@ EEGs produce large amounts of data, and like the other examples and applications
 12. https://barnasahadotcom.files.wordpress.com/2016/01/lec3-haritha-1.pdf
 13. http://dimacs.rutgers.edu/~graham/pubs/papers/cmencyc.pdf
 14. https://tjn-blog-images.s3.amazonaws.com/wp-content/uploads/2017/07/18164223/online-retail-810x380.jpg
+15. https://arxiv.org/pdf/2201.13181v1.pdf
+16. https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8577023
+17. http://dsp.ucsd.edu/home/publications/SPAWC.pdf
+18. https://www.cs.utexas.edu/~ecprice/courses/sublinear/bwca-sparse-recovery.pdf
+19. https://en.wikipedia.org/wiki/Electroencephalography

@@ -147,49 +147,49 @@ Now let's return once again to the running example of the market researcher. Usi
 <!-- ![image info](/images/sparse-recovery/excel.jpg) -->
 <img src="/images/sparse-recovery/excel.jpg" alt="" style=" display: block; margin-left: auto; margin-right: auto; width: 60%;"/>
  
-This is where the sparse recovery problem comes in. Suppose we have a vector $x$, which can be arbitrarily large. If $x$ contains $s$ nonzero elements or less, we want to return all those nonzero entries. If $x$ has more than s nonzero entries, we want to be able to recognize this as well. In other words, we only want to return the few “important” elements of a vector $x$. Beyond E-commerce research, this problem also has extensive applications in signal processing, such as speech recognition, imaging, and data collection. 
+This is where the sparse recovery problem comes in. Suppose we have a vector $$x$$, which can be arbitrarily large. If $$x$$ contains $$s$$ nonzero elements or less, we want to return all those nonzero entries. If $$x$$ has more than s nonzero entries, we want to be able to recognize this as well. In other words, we only want to return the few “important” elements of a vector $$x$$. Beyond E-commerce research, this problem also has extensive applications in signal processing, such as speech recognition, imaging, and data collection. 
 
 ## Building Blocks of the Algorithm
 
-It was mentioned above that $x$ should have “$s$ nonzero elements or less”. We refer to this property as being $x$ is s-sparse if this is the case. So, we say that $x$ is 1-sparse if there is only one nonzero element in $x$. This forms the core building block for our sparse recovery algorithm: the 1-sparse recovery sketch. The core idea for the 1-sparse recovery sketch is that we want to maintain three numbers:
-- $w_1 = \sum_{i=1}^{n} x_i$ 
-- $w_2 = \sum_{i=1}^{n} x_i \times i$
-- $w_3 = \sum_{i=1}^{n} x_i \times r^i \mod p$, where $p >= n^c$ is a prime, and $r$ is randomly sampled from $\{ 1, \dots, p - 1 \}$. 
+It was mentioned above that $$x$$ should have “$$s$$ nonzero elements or less”. We refer to this property as being $$x$$ is s-sparse if this is the case. So, we say that $$x$$ is 1-sparse if there is only one nonzero element in $$x$$. This forms the core building block for our sparse recovery algorithm: the 1-sparse recovery sketch. The core idea for the 1-sparse recovery sketch is that we want to maintain three numbers:
+- $$w_1 = \sum_{i=1}^{n} x_i$$ 
+- $$w_2 = \sum_{i=1}^{n} x_i \times i$$
+- $$w_3 = \sum_{i=1}^{n} x_i \times r^i \mod p$$, where $$p >= n^c$$ is a prime, and $$r$$ is randomly sampled from $$\{ 1, \dots, p - 1 \}$$. 
 
-Given any update $\Delta$ to the $i$th entry of x, we update $w_1 \leftarrow w_1 + \Delta$, $w_2 \leftarrow w_2 + \Delta \times i$, $w_3 \leftarrow w_3 + \Delta \times r^i \mod p$.
+Given any update $$\Delta$$ to the $$i$$th entry of x, we update $$w_1 \leftarrow w_1 + \Delta$$, $$w_2 \leftarrow w_2 + \Delta \times i$$, $$w_3 \leftarrow w_3 + \Delta \times r^i \mod p$$.
 
-In fact, three numbers are all we need for our 1-sparse recovery sketch $sk(x)$. Given a query, use our sketch to report our answer as follows:
-- We report that $x = 0$ if $w_1 = w_2 = w_3 = 0$,  as there are never any updates to any entries of $x$.
-- We report that $x$ is not 1-sparse if $\frac{w_2}{w_1} \notin \{1, \dots, n \}$ or $w_3 \neq w_1 \times r^{w_2 / w_1} \mod p$.
-- Otherwise, we report that $x$ is 1-sparse, and return the index and count of the desired element using $(i, x_i) = (\frac{w_1}{w_2}, w_1)$.
+In fact, three numbers are all we need for our 1-sparse recovery sketch $$sk(x)$$. Given a query, use our sketch to report our answer as follows:
+- We report that $$x = 0$$ if $$w_1 = w_2 = w_3 = 0$$,  as there are never any updates to any entries of $$x$$.
+- We report that $$x$$ is not 1-sparse if $$\frac{w_2}{w_1} \notin \{1, \dots, n \}$$ or $$w_3 \neq w_1 \times r^{w_2 / w_1} \mod p$$.
+- Otherwise, we report that $$x$$ is 1-sparse, and return the index and count of the desired element using $$(i, x_i) = (\frac{w_1}{w_2}, w_1)$$.
 
 ## Correctness and Probability Analysis
 
-Following the definitions of $w_1, w_2,$ and $w_3$, we can build an intuition that this works simply by plugging in values under scenarios where $x$ is 1-sparse or not. However by plugging in numbers alone, we'll soon realize that there are instances where this doesn't always work. Nonetheless, we can show that this still holds with high probability, that is dependent on the prime $p$.
+Following the definitions of $$w_1, w_2,$$ and $$w_3$$, we can build an intuition that this works simply by plugging in values under scenarios where $$x$$ is 1-sparse or not. However by plugging in numbers alone, we'll soon realize that there are instances where this doesn't always work. Nonetheless, we can show that this still holds with high probability, that is dependent on the prime $$p$$.
 
-We first assume that $\frac{w_2}{w_1} \in \{1, \dots, n \}$. Then, we want to find the probability that $w_3 - w_1 \times r^{w_2 / w_1} = 0 \mod p$. By substituting in the definitions of $w_3$ and $w_1$, we notice that we obtain a degree $n$ polynomial in $r$ over $\mathbb{F}_p$. This probability is simply the probability that our polynomial is $0 \mod p$. In other words, the probability of sampling a root of our polynomaial, over a set of size $p$. This is at most $\frac{n}{p}$, where we remember that $p = n^c$.
+We first assume that $$\frac{w_2}{w_1} \in \{1, \dots, n \}$$. Then, we want to find the probability that $$w_3 - w_1 \times r^{w_2 / w_1} = 0 \mod p$$. By substituting in the definitions of $$w_3$$ and $$w_1$$, we notice that we obtain a degree $$n$$ polynomial in $$r$$ over $$\mathbb{F}_p$$. This probability is simply the probability that our polynomial is $$0 \mod p$$. In other words, the probability of sampling a root of our polynomaial, over a set of size $$p$$. This is at most $$\frac{n}{p}$$, where we remember that $$p = n^c$$.
 
-This is great! As we have just found that any query to our sketch is correct with probability $1 - n^{c - 1}$. We can easily adjust this probability to be arbitrarily high by adjusting the constant $c$. 
+This is great! As we have just found that any query to our sketch is correct with probability $$1 - n^{c - 1}$$. We can easily adjust this probability to be arbitrarily high by adjusting the constant $$c$$. 
 
 ## The Sparse Recovery Algorithm
-Using our 1-sparse recovery sketch, we are almost ready to complete our full sparse recovery algorithm. Conceptually, the sparse recovery algorithm is composed of $k = O(s)$ many 1-sparse vcectors and 1-sparse recovery sketches for each of $s$ nonzero entries. But we're lacking one core detail: How do we make sure that our vector can be maintained by a series of $k$ 1-sparse vectors? The answer is in something we have already covered: Hash functions and universal hash families. 
+Using our 1-sparse recovery sketch, we are almost ready to complete our full sparse recovery algorithm. Conceptually, the sparse recovery algorithm is composed of $$k = O(s)$$ many 1-sparse vcectors and 1-sparse recovery sketches for each of $$s$$ nonzero entries. But we're lacking one core detail: How do we make sure that our vector can be maintained by a series of $$k$$ 1-sparse vectors? The answer is in something we have already covered: Hash functions and universal hash families. 
 
 <!-- ![image info](/images/sparse-recovery/1rev.png) -->
 <img src="/images/sparse-recovery/1rev.png" alt="" style=" display: block; margin-left: auto; margin-right: auto; width: 60%;"/>
 
 Let's try out the following algorithm:
-We start by initializing a hash function $h: [n] \rightarrow [2s]$, as well as $2s$ many 1-sparse recovery data strutures. For any update $(i, \Delta)$, we update the $h(i)^{\text{th}}$ 1-sparse recovery data structure and $w_3 \leftarrow w_3 + \Delta \times r^i \mod p$. Now, to process a query, we compute the two items:
-1. The set of all $(i, x_i)$ reported by any of the 1-sparse recovery data structures, known as $S_{report}$. 
-2. An estimated $\tilde{w_3} = \sum_{(i, x_i) \in S_{report}} x_i r^i \mod p$.
-Now if, $|{S_{report}}| > s$ or $w_3 \neq \tilde{w_3}$, we report that $x$ is not s-sparse. Otherwise, we return $S_{report}$ as our answer. 
+We start by initializing a hash function $$h: [n] \rightarrow [2s]$$, as well as $$2s$$ many 1-sparse recovery data strutures. For any update $$(i, \Delta)$$, we update the $$h(i)^{\text{th}}$$ 1-sparse recovery data structure and $$w_3 \leftarrow w_3 + \Delta \times r^i \mod p$$. Now, to process a query, we compute the two items:
+1. The set of all $$(i, x_i)$$ reported by any of the 1-sparse recovery data structures, known as $$S_{report}$$. 
+2. An estimated $$\tilde{w_3} = \sum_{(i, x_i) \in S_{report}} x_i r^i \mod p$$.
+Now if, $$|{S_{report}}| > s$$ or $$w_3 \neq \tilde{w_3}$$, we report that $$x$$ is not s-sparse. Otherwise, we return $$S_{report}$$ as our answer. 
 
-Since we are working with hash functions here, we recognize that there is a possibility of a collision. In this case, we might fail to report a nonzero element $i$. However, this creates an issue with our exisiting algorithm. The probability of a collision is high, as there are roughly $s$ many terms and $2s$ possible 1-sparse recovery data structures. This means there at most a $\frac{1}{2}$ probability of a collision, and therefore failure. 
+Since we are working with hash functions here, we recognize that there is a possibility of a collision. In this case, we might fail to report a nonzero element $$i$$. However, this creates an issue with our exisiting algorithm. The probability of a collision is high, as there are roughly $$s$$ many terms and $$2s$$ possible 1-sparse recovery data structures. This means there at most a $$\frac{1}{2}$$ probability of a collision, and therefore failure. 
 
-To remedy this, we need to make $c\log{n}$ independent copies of the hash function and as well as the $2s$ 1-sparse recovery data strcutures. Now, the probability of a collision is only $\frac{1}{n^{c}}$, where we can make $c$ as large as we want.
+To remedy this, we need to make $$c\log{n}$$ independent copies of the hash function and as well as the $$2s$$ 1-sparse recovery data strcutures. Now, the probability of a collision is only $$\frac{1}{n^{c}}$$, where we can make $$c$$ as large as we want.
 
 ## Space Complexity
 
-Our sparse recovery data strcuture accomplishes the goal that wanted to achieve. But how much space does it require? We saw that we had to make many copies of hash functions and 1-sparse recovery data structures. But how much space does each one need? This is where universal hash families come in. We know that each 1-sparse recovery data structure only needs 3 numbers, $w_1, w_2, w_3$, to represent it. We also know that there is a universal hash family, $h_{(a,b)} = ((ax + b) \mod p) \mod M$ which only needs two numbers $a$ and $b$ to represent it. With that, the space complexity for our sparse recovery data structure is $O(s\log n)$. That's pretty managable!
+Our sparse recovery data strcuture accomplishes the goal that wanted to achieve. But how much space does it require? We saw that we had to make many copies of hash functions and 1-sparse recovery data structures. But how much space does each one need? This is where universal hash families come in. We know that each 1-sparse recovery data structure only needs 3 numbers, $$w_1, w_2, w_3$$, to represent it. We also know that there is a universal hash family, $$h_{(a,b)} = ((ax + b) \mod p) \mod M$$ which only needs two numbers $$a$$ and $$b$$ to represent it. With that, the space complexity for our sparse recovery data structure is $$O(s\log n)$$. That's pretty managable!
 
 ## Applications of Sparse Recovery 
 
@@ -201,7 +201,7 @@ Electroencephalogram (EEGs) are used to detect electrical activity in the brain 
 <!-- ![image info](/images/sparse-recovery/eeg.png) -->
 <img src="/images/sparse-recovery/eeg.png" alt="" style=" display: block; margin-left: auto; margin-right: auto; width: 60%;"/>
 
-EEGs produce large amounts of data, and like the other examples and applications we've seen, this requires large amounts of storage that can quickly become too expensive. This problem can be solved by using sparse recovery. By treating the EEG inputs as the vector $x$, neuroscientists can recover the electrical brain signals generated by the patient with only $O(s\log n)$ space! With hundreds or thousands of patients, sparse recovery is extremely effective and valuable, allowing more computational and hardware resources to be used for the analysis of the data itself. 
+EEGs produce large amounts of data, and like the other examples and applications we've seen, this requires large amounts of storage that can quickly become too expensive. This problem can be solved by using sparse recovery. By treating the EEG inputs as the vector $$x$$, neuroscientists can recover the electrical brain signals generated by the patient with only $$O(s\log n)$$ space! With hundreds or thousands of patients, sparse recovery is extremely effective and valuable, allowing more computational and hardware resources to be used for the analysis of the data itself. 
 
 ## References
 1. Prof. Thatchaphol’s EECS 586 Lecture Notes
